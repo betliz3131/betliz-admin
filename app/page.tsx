@@ -1,36 +1,54 @@
 import { supabase } from "@/lib/supabase";
-import UserChart from "@/components/UserChart";
 
-export default async function HomePage() {
-  const { data: users } = await supabase.from("users").select("*");
-  const { data: logs } = await supabase.from("logs").select("*");
+export default async function Dashboard() {
+  const { count: usersCount } = await supabase
+    .from("users")
+    .select("*", { count: "exact", head: true });
 
-  const chartData =
-    users?.map((u, i) => ({
-      name: `U${i + 1}`,
-      users: i + 1,
-    })) || [];
+  const { count: logsCount } = await supabase
+    .from("logs")
+    .select("*", { count: "exact", head: true });
+
+  const { data: latestLogs } = await supabase
+    .from("logs")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(5);
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
 
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white border p-4 rounded">
-          Users: {users?.length || 0}
+      {/* CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white p-5 rounded-xl border">
+          <p className="text-gray-500">Users</p>
+          <p className="text-3xl font-bold">{usersCount}</p>
         </div>
 
-        <div className="bg-white border p-4 rounded">
-          Logs: {logs?.length || 0}
-        </div>
-
-        <div className="bg-white border p-4 rounded">
-          Status: OK
+        <div className="bg-white p-5 rounded-xl border">
+          <p className="text-gray-500">Logs</p>
+          <p className="text-3xl font-bold">{logsCount}</p>
         </div>
       </div>
 
-      <div className="bg-white border rounded p-4 h-80">
-        <UserChart data={chartData} />
+      {/* LATEST LOGS */}
+      <div className="bg-white border rounded-xl p-5">
+        <h2 className="font-semibold mb-3">Latest Logs</h2>
+
+        <div className="space-y-2">
+          {latestLogs?.map((log: any) => (
+            <div
+              key={log.id}
+              className="flex justify-between text-sm border-b py-2"
+            >
+              <span>{log.action}</span>
+              <span className="text-gray-400">
+                {new Date(log.created_at).toLocaleString()}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
