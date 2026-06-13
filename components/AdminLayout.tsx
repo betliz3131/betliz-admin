@@ -12,18 +12,22 @@ export default function AdminLayout({
         <h1 className="font-bold text-lg">Admin Panel</h1>
 
         <nav className="flex flex-col gap-2">
-          <Link href="/" className="hover:text-black text-gray-600">
-            Dashboard
-          </Link>
+  <Link href="/" className="hover:text-black text-gray-600">
+    Dashboard
+  </Link>
 
-          <Link href="/users" className="hover:text-black text-gray-600">
-            Users
-          </Link>
+  <Link href="/users" className="hover:text-black text-gray-600">
+    Users
+  </Link>
 
-          <Link href="/logs" className="hover:text-black text-gray-600">
-            Logs
-          </Link>
-        </nav>
+  <Link href="/logs" className="hover:text-black text-gray-600">
+    Logs
+  </Link>
+
+  <Link href="/settings" className="hover:text-black text-gray-600">
+    Settings
+  </Link>
+</nav>
       </aside>
 
       {/* CONTENT */}
